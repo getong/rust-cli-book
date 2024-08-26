@@ -329,7 +329,7 @@ It would look something like this:</p>
     let path = std::env::args().nth(2).expect(&quot;no path given&quot;);
 
     let args = Cli {
-        pattern: pattern,
+        pattern,
         path: std::path::PathBuf::from(path),
     };
 
@@ -452,7 +452,7 @@ to demonstrate that our program works as expected.)</p>
 <aside>
 <p><strong>Note:</strong>
 See that <a href="https://doc.rust-lang.org/1.39.0/std/result/enum.Result.html#method.expect"><code>.expect</code></a> method here?
-This is a shortcut function to quit that will make the program exit immediately
+This is a shortcut function that will make the program exit immediately
 when the value (in this case the input file)
 could not be read.
 It’s not very pretty,
@@ -1315,8 +1315,8 @@ but to a “dev dependencies” section in our <code>Cargo.toml</code>.
 They are only required when developing the crate,
 not when using it.</p>
 <pre><code class="language-toml">[dev-dependencies]
-assert_cmd = &quot;2.0.12&quot;
-predicates = &quot;3.0.4&quot;
+assert_cmd = &quot;2.0.14&quot;
+predicates = &quot;3.1.0&quot;
 </code></pre>
 <p>This sounds like a lot of setup.
 Nevertheless –
@@ -1362,7 +1362,7 @@ for example, when you are testing programs that change the files.</p>
 <p>To create these temporary files,
 we’ll be using the <a href="https://docs.rs/assert_fs"><code>assert_fs</code></a> crate.
 Let’s add it to the <code>dev-dependencies</code> in our <code>Cargo.toml</code>:</p>
-<pre><code class="language-toml">assert_fs = &quot;1.0.13&quot;
+<pre><code class="language-toml">assert_fs = &quot;1.1.1&quot;
 </code></pre>
 <p>Here is a new test case
 (that you can write below the other one)
@@ -1779,7 +1779,7 @@ and it is currently the library with the widest community support.</p>
 use std::{error::Error, thread, time::Duration};
 
 fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
-    let mut signals = Signals::new(&amp;[SIGINT])?;
+    let mut signals = Signals::new([SIGINT])?;
 
     thread::spawn(move || {
         for sig in signals.forever() {
@@ -2092,8 +2092,8 @@ It covers how to write output to the terminal.</p>
 Is our output for a human in front of a colorful terminal,
 or for another program?
 To answer this,
-we can use a crate like <a href="https://crates.io/crates/is-terminal">is-terminal</a>:</p>
-<pre><code class="language-rust ignore">use is_terminal::IsTerminal as _;
+we can use the <a href="https://doc.rust-lang.org/stable/std/io/trait.IsTerminal.html">IsTerminal</a> trait:</p>
+<pre><code class="language-rust ignore">use std::io::IsTerminal;
 
 if std::io::stdout().is_terminal() {
     println!(&quot;I'm a terminal&quot;);
@@ -2305,10 +2305,9 @@ from the standard library. Similar to reading the lines of a file, it can read
 the lines from stdin.</p>
 <p>Here’s a program that counts the words of what’s piped in via stdin</p>
 <pre><code class="language-rust ignore">use clap::{CommandFactory, Parser};
-use is_terminal::IsTerminal as _;
 use std::{
     fs::File,
-    io::{stdin, BufRead, BufReader},
+    io::{stdin, BufRead, BufReader, IsTerminal},
     path::PathBuf,
 };
 
@@ -2424,7 +2423,6 @@ you’ll be able to admire your free documentation.</p>
 <li><a href="https://crates.io/crates/exitcode">exitcode</a> - system exit code constants</li>
 <li><a href="https://crates.io/crates/human-panic">human-panic</a> - panic message handler</li>
 <li><a href="https://crates.io/crates/indicatif">indicatif</a> - progress bars and spinners</li>
-<li><a href="https://crates.io/crates/is-terminal">is-terminal</a> - detected whether application is running in a tty</li>
 <li><a href="https://crates.io/crates/log">log</a> - provides logging abstracted over implementation</li>
 <li><a href="https://crates.io/crates/predicates">predicates</a> - implements boolean-valued predicate functions</li>
 <li><a href="https://crates.io/crates/proptest">proptest</a> - property testing framework</li>
